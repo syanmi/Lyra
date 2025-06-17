@@ -2,13 +2,13 @@
 {
     public class ExceptionHandlerOptions
     {
-        private readonly List<PipelineNode> _handlers = new ();
+        private readonly List<PipelineNode> _handlers = [];
         private PipelineNode _fallback = DefaultUnhandledHandler;
 
         public PipelineNode[] Handlers => _handlers.ToArray();
         public PipelineNode FallbackHandler => _fallback;
 
-        public void Handle<TException>(Func<LyraContext, Exception, Task> handler) where TException : Exception
+        public void Handle<TException>(Func<ILyraContext, Exception, Task> handler) where TException : Exception
         {
             _handlers.Add(async (ctx, next) => 
             {
@@ -23,7 +23,7 @@
             });
         }
 
-        public void OnUnhandled(Func<LyraContext, Exception, Task> handler)
+        public void OnUnhandled(Func<ILyraContext, Exception, Task> handler)
         {
             _fallback = async (ctx, next) => 
             {
@@ -38,7 +38,7 @@
             };
         }
 
-        private static async Task DefaultUnhandledHandler(LyraContext context, Func<Task> next)
+        private static async Task DefaultUnhandledHandler(ILyraContext context, Func<Task> next)
         {
             try
             {
@@ -46,7 +46,7 @@
             }
             catch (Exception)
             {
-                var result = LyraResult.InternalServerError("Internal Server Error");
+                var result = LyraResult.InternalServerError();
                 await context.InvokeResult(result);
             }
         }

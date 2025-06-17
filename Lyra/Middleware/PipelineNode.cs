@@ -1,4 +1,4 @@
 ﻿namespace Lyra.Middleware
 {
-    public delegate Task PipelineNode(LyraContext context, Func<Task> next);
+    public delegate Task PipelineNode(ILyraContext context, Func<Task> next);
 }

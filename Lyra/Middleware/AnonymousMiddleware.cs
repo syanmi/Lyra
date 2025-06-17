@@ -2,14 +2,14 @@
 {
     internal class AnonymousMiddleware : IMiddleware
     {
-        private readonly Func<LyraContext, Func<Task>, Task> _handler;
+        private readonly Func<ILyraContext, Func<Task>, Task> _handler;
 
-        public AnonymousMiddleware(Func<LyraContext, Func<Task>, Task> handler)
+        public AnonymousMiddleware(Func<ILyraContext, Func<Task>, Task> handler)
         {
             _handler = handler ?? throw new ArgumentNullException(nameof(handler), "Handler cannot be null.");
         }
 
-        public AnonymousMiddleware(Action<LyraContext, Func<Task>> handler)
+        public AnonymousMiddleware(Action<ILyraContext, Func<Task>> handler)
         {
             _handler = (context, next) =>
             {
@@ -18,6 +18,6 @@
             };
         }
 
-        public Task InvokeAsync(LyraContext context, Func<Task> next) => _handler.Invoke(context, next);
+        public Task InvokeAsync(ILyraContext context, Func<Task> next) => _handler.Invoke(context, next);
     }
 }

@@ -1,11 +1,10 @@
 ﻿using System.Net;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
+using Lyra.Serialization;
 
 namespace Lyra
 {
-    internal class LyraRequest(HttpListenerRequest request, JsonSerializerContext? json = null) : ILyraRequest
+    internal class LyraRequest(HttpListenerRequest request, IJsonMultiContextSerializer json) : ILyraRequest
     {
         private readonly HttpListenerRequest _request = request ?? throw new ArgumentNullException(nameof(request), "HttpListenerRequest cannot be null.");
 
@@ -29,9 +28,7 @@ namespace Lyra
 
         public async Task<T?> ReadBodyAsync<T>(CancellationToken token = default)
         {
-            if(json == null) throw new InvalidOperationException("JsonSerializerContext is not set. Use UseJsonContext method to set it.");
-
-            var info = json.GetTypeInfo(typeof(T)) as JsonTypeInfo<T>;
+            var info = json.GetTypeInfo<T>();
             if (info == null) throw new InvalidOperationException($"JsonSerializerContext does not contain type info for {typeof(T)}.");
 
             return await JsonSerializer.DeserializeAsync(_request.InputStream, info, token);

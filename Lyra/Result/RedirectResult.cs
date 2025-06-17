@@ -20,7 +20,7 @@
             _statusCode = statusCode;
         }
 
-        public Task ExecuteAsync(LyraContext ctx)
+        public Task ExecuteAsync(ILyraContext ctx)
         {
             ctx.Response.StatusCode = _statusCode;
             ctx.Response.Headers["Location"] = _url;

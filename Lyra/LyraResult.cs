@@ -9,13 +9,19 @@ namespace Lyra
         public static ILyraResult Ok<T>(T value) => Json(value);
         public static ILyraResult Created<T>(T value) => Json(value, (int)HttpStatusCode.Created);
         public static ILyraResult Accepted() => Empty((int)HttpStatusCode.Accepted);
-        
+
         // error
+        public static ILyraResult BadRequest(string detail = "Bad Request") => BadRequest(new DetailResponse(detail));
         public static ILyraResult BadRequest<T>(T value) => Json(value, (int)HttpStatusCode.BadRequest);
+        public static ILyraResult Unauthorized(string detail = "Unauthorized") => Unauthorized(new DetailResponse(detail));
         public static ILyraResult Unauthorized<T>(T value) => Json(value, (int)HttpStatusCode.Unauthorized);
+        public static ILyraResult Forbidden(string detail = "Forbidden") => Forbidden(new DetailResponse(detail));
         public static ILyraResult Forbidden<T>(T value) => Json(value, (int)HttpStatusCode.Forbidden);
+        public static ILyraResult NotFound(string detail = "Not Found") => NotFound(new DetailResponse(detail));
         public static ILyraResult NotFound<T>(T value) => Json(value, (int)HttpStatusCode.NotFound);
+        public static ILyraResult Conflict(string detail = "Conflict") => Conflict(new DetailResponse(detail));
         public static ILyraResult Conflict<T>(T value) => Json(value, (int)HttpStatusCode.Conflict);
+        public static ILyraResult InternalServerError(string detail = "Internal Server Error") => InternalServerError(new DetailResponse(detail));
         public static ILyraResult InternalServerError<T>(T value) => Json(value, (int)HttpStatusCode.InternalServerError);
 
         // utility

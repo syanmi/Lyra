@@ -2,7 +2,7 @@
 {
     internal class PipelineBuilder
     {
-        private readonly List<PipelineNode> _nodes = new();
+        private readonly List<PipelineNode> _nodes = [];
 
         public void Add(PipelineNode node)
         {

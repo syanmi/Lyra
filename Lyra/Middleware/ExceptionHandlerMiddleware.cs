@@ -10,6 +10,6 @@
             _handler = options.FallbackHandler.Append(handler);
         }
 
-        public Task InvokeAsync(LyraContext context, Func<Task> next) => _handler.Invoke(context, next);
+        public Task InvokeAsync(ILyraContext context, Func<Task> next) => _handler.Invoke(context, next);
     }
 }

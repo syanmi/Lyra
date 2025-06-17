@@ -21,8 +21,14 @@ app.Use(async (ctx, next) =>
     Console.WriteLine($"[ROOT] [{ctx.Request.Method}] {ctx.Request.Path} - {sw.ElapsedMilliseconds}ms");
 });
 
-app.Get("/hello", 
-    ctx => Task.FromResult(LyraResult.Text("Hello from Lyra!")));
+//app.Get("/hello", 
+//    ctx => Task.FromResult(LyraResult.Text("Hello from Lyra!")));
+
+app.Get("/hello",
+    ctx =>
+    {
+        return Task.FromResult(LyraResult.BadRequest("test mesg"));
+    });
 
 app.Post("/echo", async ctx =>
 {
@@ -37,7 +43,7 @@ app.Get("/company/{cid}/employee/{eid}", ctx => {
     return Task.FromResult(LyraResult.Json<TestData>(new TestData() { Cid = cid, Eid = eid }));
 });
 
-app.Post<TestData>("/company/{cid}/employee/{eid}", (LyraContext ctx, TestData dto) =>
+app.Post<TestData>("/company/{cid}/employee/{eid}", (ILyraContext ctx, TestData dto) =>
 {
     var result = LyraResult.Text($"Request Body : Cid[{dto.Cid}] Eid[{dto.Eid}]");
     return Task.FromResult(result);

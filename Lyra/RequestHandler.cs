@@ -1,4 +1,4 @@
 ﻿namespace Lyra
 {
-    public delegate Task RequestHandler(LyraContext context);
+    public delegate Task RequestHandler(ILyraContext context);
 }

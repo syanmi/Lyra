@@ -2,6 +2,6 @@
 {
     public interface ILyraResult
     {
-        public Task ExecuteAsync(LyraContext ctx);
+        public Task ExecuteAsync(ILyraContext ctx);
     }
 }

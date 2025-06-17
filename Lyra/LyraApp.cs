@@ -1,18 +1,24 @@
 ﻿using Lyra.Middleware;
 using System.Net;
-using System.Text;
 using System.Text.Json.Serialization;
+using Lyra.Serialization;
 
 namespace Lyra
 {
     public class LyraApp
     {
         private readonly PipelineBuilder _builder = new ();
-        private readonly List<RouteEntry> _routes = new();
-        private readonly List<SunAppEntry> _subEntries = new();
-        private JsonSerializerContext? _json;
+        private readonly List<RouteEntry> _routes = [];
+        private readonly List<SunAppEntry> _subEntries = [];
+        private readonly JsonMultiContextSerializer _jsonSerializer = new (new LyraJsonSerializerContext());
 
-        public void UseJsonContext(JsonSerializerContext context) => _json = context;
+        public void UseJsonContext(JsonSerializerContext context)
+        {
+            if (context is not LyraJsonSerializerContext)
+            {
+                _jsonSerializer.AddContext(context);
+            }
+        }
 
         public void Use(PipelineNode middleware)
             => _builder.Add(middleware);
@@ -27,9 +33,14 @@ namespace Lyra
 
             var handler = _builder.Build(async ctx =>
             {
-                await subApp.InvokeAsync(ctx.RelativePath, ctx);
+                var context = ctx as LyraContext ?? throw new InvalidOperationException("Context must be of type LyraContext.");
+                await subApp.InvokeAsync(context.RelativePath, context);
             });
 
+            foreach (var jsonContext in _jsonSerializer.Contexts)
+            {
+                subApp.UseJsonContext(jsonContext);
+            }
             _subEntries.Add(new SunAppEntry(prefix.TrimEnd('/'), subApp, handler));
         }
 
@@ -45,8 +56,9 @@ namespace Lyra
                 var ctx = await listener.GetContextAsync();
                 _ = Task.Run(async () =>
                 {
-                    var lyraCtx = new LyraContext(ctx.Request, ctx.Response, _json);
+                    var lyraCtx = new LyraContext(ctx.Request, ctx.Response, _jsonSerializer);
                     await InvokeAsync(ctx.Request.Url?.AbsolutePath ?? string.Empty, lyraCtx);
+                    ctx.Response.Close();
                 }, token);
             }
 
@@ -62,14 +74,12 @@ namespace Lyra
                 return;
             }
 
-            var req = ctx.Request;
-            var res = ctx.Response;
-            var route = _routes.FirstOrDefault(r => r.Method == req.Method && r.Regex.IsMatch(path));
+            var request = ctx.Request;
+            var route = _routes.FirstOrDefault(r => r.Method == request.Method && r.Regex.IsMatch(path));
             if (route == null)
             {
-                res.StatusCode = 404;
-                await res.WriteContentAsync(Encoding.UTF8.GetBytes("Not Found"));
-                res.Close();
+                var result = LyraResult.NotFound();
+                await ctx.InvokeResult(result);
                 return;
             }
 
@@ -77,13 +87,11 @@ namespace Lyra
             {
                 await route.InvokeAsync(path, ctx);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
-                throw;
+                var result = LyraResult.InternalServerError();
+                await ctx.InvokeResult(result);
             }
-
-            res.Close();
         }
     }
 }

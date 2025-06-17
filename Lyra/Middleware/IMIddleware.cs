@@ -2,6 +2,6 @@
 {
     public interface IMiddleware
     {
-        Task InvokeAsync(LyraContext context, Func<Task> next);
+        Task InvokeAsync(ILyraContext context, Func<Task> next);
     }
 }

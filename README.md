@@ -1,4 +1,5 @@
 # 🌟 Lyra - Lightweight, AOT-Ready Web API Framework for .NET
+[![NuGet](https://img.shields.io/nuget/v/Lyra.svg)](https://www.nuget.org/packages/Lyra)
 
 **Lyra** is a **minimal**, **fast**, and **AOT-friendly** web API framework for C#.
 Inspired by Express.js, it’s designed for **microservices**, **internal tools**, and **self-hosted apps** that need **performance without the bloat**.

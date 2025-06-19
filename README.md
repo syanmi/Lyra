@@ -25,8 +25,9 @@ Just clone the repo and run a sample:
 
 ```bash
 git clone https://github.com/syanmi/Lyra.git
-cd Lyra/SampleConsoleApp/
-dotnet run
+cd Lyra/sandbox/LyraSampleApp/
+start /b dotnet run
+curl http://localhost:8080/hello
 ```
 
 Or create a simple app like this:
@@ -34,7 +35,7 @@ Or create a simple app like this:
 ```csharp
 var app = new LyraApp();
 
-app.Get("/hello", ctx => ctx.Text("Hello from Lyra!"));
+app.Get("/hello", ctx => LyraResult.Text("Hello from Lyra!"));
 
 await app.RunAsync();
 ```
@@ -64,7 +65,7 @@ public partial class MyJsonContext : JsonSerializerContext {}
 
 ```csharp
 var sub = new LyraApp();
-sub.Get("/hi", ctx => ctx.Text("Hello from SubApp!"));
+sub.Get("/hi", ctx => LyraResult.Text("Hello from SubApp!"));
 
 app.Use(async (ctx, next) =>
 {
@@ -72,14 +73,13 @@ app.Use(async (ctx, next) =>
     await next();
 });
 
-app.UseSubApp("/sub", sub);
+app.Map("/sub", sub);
 ```
 
 - Compose multiple apps like Express's `app.use('/path', sub)`
 - Build modular and reusable APIs
 
-
-## 📂 Static File Serving
+## 📂 Static File Serving (🚧coming soon)
 
 ```csharp
 app.UseStaticFiles("wwwroot");
@@ -96,9 +96,9 @@ app.UseStaticFiles("wwwroot");
 | JSON Binding (AOT)   | ✅     |
 | Middleware           | ✅     |
 | SubApps              | ✅     |
-| Static Files         | ✅     |
-| CLI Integration      | 🚧 *(coming soon)*  
-| NuGet Package        | 🚧 *(planned for v1.0)*
+| Static Files         | 🚧 *(coming soon)*      |
+| CLI Integration      | 🚧 *(coming soon)*      |
+| NuGet Package        | 🚧 *(planned for v1.0)*      |
 
 ## 📌 Roadmap
 

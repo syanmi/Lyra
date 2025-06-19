@@ -26,11 +26,8 @@ namespace Lyra
         public void Route(string method, string path, RequestHandler handler)
             => _routes.Add(new RouteEntry(method, path, _builder.Build(handler)));
 
-        public void Map(string prefix, Action<LyraApp> configure)
+        public void Map(string prefix, LyraApp subApp)
         {
-            var subApp = new LyraApp();
-            configure(subApp);
-
             var handler = _builder.Build(async ctx =>
             {
                 var context = ctx as LyraContext ?? throw new InvalidOperationException("Context must be of type LyraContext.");
@@ -44,7 +41,7 @@ namespace Lyra
             _subEntries.Add(new SunAppEntry(prefix.TrimEnd('/'), subApp, handler));
         }
 
-        public async Task RunAsync(int port, CancellationToken token = default)
+        public async Task RunAsync(int port = 8080, CancellationToken token = default)
         {
             var listener = new HttpListener();
             listener.Prefixes.Add($"http://localhost:{port}/");

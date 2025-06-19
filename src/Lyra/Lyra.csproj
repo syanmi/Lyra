@@ -22,6 +22,7 @@
     <PackageTags>Lyra;WebAPI;MinimalAPI;AOT;Lightweight</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/syanmi/Lyra</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/syanmi/Lyra</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>

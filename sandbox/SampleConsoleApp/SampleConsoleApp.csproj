@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lyra\Lyra.csproj" />
+    <ProjectReference Include="..\..\src\Lyra\Lyra.csproj" />
   </ItemGroup>
 
 </Project>

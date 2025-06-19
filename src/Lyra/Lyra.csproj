@@ -12,4 +12,21 @@
     <None Remove="Extensions\**" />
   </ItemGroup>
 
+  <!-- NuGet config -->
+  <PropertyGroup>
+    <PackageId>Lyra</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Syanmi</Authors>
+    <Company>Lyra Project</Company>
+    <Description>Lightweight and AOT-friendly web API framework for .NET</Description>
+    <PackageTags>Lyra;WebAPI;MinimalAPI;AOT;Lightweight</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/syanmi/Lyra</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
 </Project>
